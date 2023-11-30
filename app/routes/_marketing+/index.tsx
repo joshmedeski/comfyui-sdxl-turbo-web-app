@@ -85,14 +85,11 @@ const comfyUiPrompt = (positivePrompt: string) => {
 function listenToWebSocket(socket: WebSocket) {
 	return new Promise((resolve, reject) => {
 		socket.addEventListener('message', (event: any) => {
-			console.log('message', event.data)
-			console.log('message', typeof event.data)
 			if (typeof event.data === 'string') {
 				console.log('data', JSON.parse(event.data)?.data)
 				console.log('status', event.data?.status)
 				const remaining = JSON.parse(event.data)?.data?.status?.exec_info
 					?.queue_remaining
-				console.log('remaining', remaining)
 				if (remaining === 0) {
 					resolve(event.data)
 				}
@@ -101,12 +98,11 @@ function listenToWebSocket(socket: WebSocket) {
 
 		socket.addEventListener('error', error => {
 			// Reject the promise with the error
-			console.log('errors', error)
+			console.error('errors', error)
 			reject(error)
 		})
 
 		socket.addEventListener('close', () => {
-			console.log('closed')
 			// Reject the promise if the connection is closed without receiving any messages
 			reject(new Error('WebSocket connection closed.'))
 		})
